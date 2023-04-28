@@ -1,0 +1,18 @@
+include MANIFEST.in
+include requirements.txt
+include *.json
+include *.md
+include *.py
+include *.txt
+recursive-include nexgo_etr *.css
+recursive-include nexgo_etr *.csv
+recursive-include nexgo_etr *.html
+recursive-include nexgo_etr *.ico
+recursive-include nexgo_etr *.js
+recursive-include nexgo_etr *.json
+recursive-include nexgo_etr *.md
+recursive-include nexgo_etr *.png
+recursive-include nexgo_etr *.py
+recursive-include nexgo_etr *.svg
+recursive-include nexgo_etr *.txt
+recursive-exclude nexgo_etr *.pyc
