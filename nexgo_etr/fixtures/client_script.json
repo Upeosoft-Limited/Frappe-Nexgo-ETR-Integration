@@ -1,0 +1,24 @@
+[
+ {
+  "docstatus": 0,
+  "doctype": "Client Script",
+  "dt": "Sales Invoice",
+  "enabled": 1,
+  "modified": "2023-04-28 16:00:09.567492",
+  "module": "Nexgo Etr",
+  "name": "custom sales invoice button",
+  "script": "\nfrappe.ui.form.on('Sales Invoice',{\n    \n    refresh:function(frm,cdt,cdn){\n      let item=locals[cdt][cdn]\n      frm.add_custom_button(__('Send Fiscal Receipt To KRA'), function(){\n        //console.log(item.items[0].item_code,\"nkvbfdsmlf\")\n        console.log(item.items)\n        \n            let item_names=item.items[0].parent\n              frappe.call({\n        method: 'nexgo_etr.services.rest.post_data',\n        args: {\n       \n            \"item\":item_names\n            },\n        callback:function (r) {\n            // let invoice_data=  r.message[0]\n            // let image_url=  r.message[1]\n    //         let invoice_data_array=Object.values(invoice_data)\n    //         let invoice_mid_number=invoice_data_array[1].middlewareInvoiceNumber\n    //         let url=`https://itax.kra.go.ke/KRA-Portal/invoiceChk.htm?actionCode=loadPage&invoiceNo=${invoice_mid_number}`\n    // console.log(image_url)\n    //     frm.set_value(\"qrcode_image\",image_url)\n        console.log(frm.doc.qrcode_image)\n        }\n            \n    });\n        \n        frappe.msgprint(\"Data sent successfully\");\n    },__(\"KRA\"))\n    \n    \n      frm.add_custom_button(__('Send Return Receipt To KRA'), function(){\n        let item_names=item.items[0].parent\n        frappe.call({\n        method: 'nexgo_etr.services.rest.return_invoice',\n        args: {\n            \"item\":item_names\n                },\n        callback:function (r) {\n            let message=r.message[1]\n            if(message===true){\n                frappe.msgprint(\"Return Invoice succesfully sent !!\");\n            }else{\n                frappe.msgprint(\"An Error Occurred Receipt Not Sent\");\n            }\n        }\n            \n    });\n     },__(\"KRA\"))\n     \n     \n     \n      frm.add_custom_button(__('Send Debit Note Receipt To KRA'), function(){\n        let item_names=item.items[0].parent\n        frappe.call({\n        method: 'nexgo_etr.services.rest.send_debit_note',\n        args: {\n            \"item\":item_names\n                },\n        callback:function (r) {\n            let message=r.message[1]\n            if(message===true){\n                frappe.msgprint(\"Debit Receipt succesfully sent !!\");\n            }else{\n                frappe.msgprint(\"An Error Occurred Receipt Not Sent\");\n            }\n        }\n            \n    });\n     },__(\"KRA\"))\n     \n     \n        \n      frm.add_custom_button(__('Send Duplicate Receipt To KRA'), function(){\n        let item_names=item.items[0].parent\n        frappe.call({\n        method: 'nexgo_etr.services.rest.send_duplicate',\n        args: {\n            \"item\":item_names\n                },\n        callback:function (r) {\n            let message=r.message[1]\n            if(message===true){\n                frappe.msgprint(\"duplicate Receipt succesfully sent !!\");\n            }else{\n                frappe.msgprint(\"An Error Occurred Receipt Not Sent\");\n            }\n        }\n            \n    });\n     },__(\"KRA\"))\n    }\n     \n     \n    \n     \n     \n     \n     \n     \n    \n    \n    \n    \n    \n    \n    \n    \n    \n    \n    \n    \n    \n    \n    \n    \n    \n    \n    \n    \n        //  for(let single_item in item){\n        //      console.log(single_item.items)\n        //      }\n        // for(let single_item in item.items[0]){\n        //     console.log(single_item)\n        // }\n    \n    \n    \n    \n    \n    \n   \n    \n    \n});\n",
+  "view": "Form"
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Client Script",
+  "dt": "Customer",
+  "enabled": 1,
+  "modified": "2023-05-03 14:57:17.047882",
+  "module": "Nexgo Etr",
+  "name": "custom customer script",
+  "script": "frappe.ui.form.on('Customer',{\n    kra_pin:(frm)=>{\n        let data_in_field=frm.doc.kra_pin.toUpperCase()\n        frm.set_value(\"kra_pin\",data_in_field)\n    }\n})",
+  "view": "Form"
+ }
+]

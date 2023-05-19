@@ -1,0 +1,58 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "autoname": "field:invoice_number",
+ "creation": "2023-04-26 15:15:38.932136",
+ "default_view": "List",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "invoice_number",
+  "returned_against_invoice",
+  "invoice_qr_code"
+ ],
+ "fields": [
+  {
+   "fieldname": "invoice_number",
+   "fieldtype": "Data",
+   "label": "Invoice Number",
+   "unique": 1
+  },
+  {
+   "fieldname": "returned_against_invoice",
+   "fieldtype": "Data",
+   "label": "Returned Against Invoice"
+  },
+  {
+   "fieldname": "invoice_qr_code",
+   "fieldtype": "Long Text",
+   "label": "Invoice QR Code"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "modified": "2023-04-28 15:20:37.939075",
+ "modified_by": "Administrator",
+ "module": "Nexgo Etr",
+ "name": "Sales Return QRcodes",
+ "naming_rule": "By fieldname",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}

@@ -199,3 +199,21 @@ app_license = "MIT"
 # auth_hooks = [
 #	"nexgo_etr.auth.validate"
 # ]
+
+
+
+jinja={
+    "methods": [
+    "nexgo_etr.services.rest.get_qrCode"
+    ]
+}
+
+
+fixtures = [
+    "Client Script",
+    "Custom Field",
+    "Print Format",
+    "Property Setter"
+]
+
+
