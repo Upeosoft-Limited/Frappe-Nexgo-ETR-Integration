@@ -61,6 +61,7 @@ def post_data(item):
     posting_time=invoice_info[0]['posting_time']
 
     print(f"\n\n\n{random_receipt_number}\n\n\n")
+    print(f"\n\n\n Cash is {total_cost}\n\n\n")
 
     item_codes_array=[]
     item_codes_array.append(item)
@@ -76,12 +77,12 @@ def post_data(item):
            inv_items.append({
             "productName":invoice_item.item_name,
             "quantity":invoice_item.qty,
-            "amount":invoice_item.amount,
+            "unitPrice":invoice_item.amount,
             "taxRate": 16,
             "taxExempted": False,
-            "hsCode": "000.111.23", 
+            # "hsCode": "000.111.23", 
             "unitOfMeasure": invoice_item.uom, 
-            "discount": 10, 
+            "discount": 0, 
             "discountIsPercentage": True 
             })
             # print(f"\n\n\n this areinv_items in {items}\n\n\n")
@@ -114,7 +115,7 @@ def post_data(item):
         })
         sales_invoice_qrCodes.submit()
     
-        print(f"\n\n\n{fiscal_data}\n\n\n")
+        print(f"\n\n\n this is the response data{fiscal_data}\n\n\n")
         return fiscal_data,fiscal_data['success']
 
     
@@ -151,7 +152,7 @@ def return_invoice(item):
     for product in get_invoice_items_info:
         invoice_items.append({
             "productName":product.item_name,
-            "amount":product.amount,
+            "unitPrice":product.amount,
             "quantity":product.qty
         })
     
@@ -202,7 +203,7 @@ def send_debit_note(item):
         is_debit_note_items.append({
             "productName":product.item_name,
             "quantity":product.qty,
-            "amount":product.amount
+            "unitPrice":product.amount
         })
 
 
