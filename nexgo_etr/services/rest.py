@@ -42,7 +42,11 @@ def generate_qrCode(response_data_from_receipt_type):
     return qr_code_image
 
 link="https://itax.kra.go.ke/KRA-Portal/invoiceChk.htm?actionCode=loadPage&invoiceNo="
-url="http://192.168.100.16:8081/" 
+url="http://217.199.151.78:8080/" 
+# url="http://192.168.43.1:8081/" 
+headers = {
+    "Authorization": "Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJLUkFNVzI3NjIwMjIwNzA4Njk0NiIsImlhdCI6MTY3NjM1NTY1MCwiZXhwIjoxNzA0ODM0MDAwLCJhdWQiOiJLUkFNVzI3NjIwMjIwNzA4Njk0NiIsImlzcyI6IkFqYW5zeSBUZWNobm9sb2d5IExpbWl0ZWQifQ.5oq3VhJdHGY6Luptpz0meCY4TuRHK65WlOzU_Rd9srY"
+}
 
 @frappe.whitelist()
 def post_data(item):
@@ -50,7 +54,6 @@ def post_data(item):
     random_number=random.randint(5,60000000)
     random_receipt_number=str(random_number)+item       
 
-    # url="http://192.168.43.1:8081/" 
 
     invoice_info=frappe.db.get_all("Sales Invoice",{"name":item},["total","posting_date","posting_time"])
     total_cost=invoice_info[0]['total']
@@ -98,9 +101,9 @@ def post_data(item):
             "items":inv_items
         }      
 
-    
 
-        fiscal_response=requests.post(url,json=FISCAL)
+
+        fiscal_response=requests.post(url,json=FISCAL,headers=headers)
         fiscal_data=json.loads(fiscal_response.text)
 
         sales_invoice_qrCodes=frappe.get_doc({
@@ -164,7 +167,7 @@ def return_invoice(item):
         "isFullCreditNote":True
     }
 
-    credit_response=requests.post(url,json=CREDIT)
+    credit_response=requests.post(url,json=CREDIT,headers=headers)
     credit_data=json.loads(credit_response.text)
     print(f"\n\n\n{credit_data}\n\n\n")
     
@@ -213,7 +216,7 @@ def send_debit_note(item):
         "items":is_debit_note_items           
     }
 
-    debit_note_request=requests.post(url,json=DEBIT)
+    debit_note_request=requests.post(url,json=DEBIT,headers=headers)
     debit_note_response=json.loads(debit_note_request.text)
     print(f"\n\n\n\n{debit_note_response}\n\n\n\n")
 
@@ -245,7 +248,7 @@ def send_duplicate(item):
 
     }
 
-    is_duplicate_request=requests.post(url,json=IS_DUPLICATE)
+    is_duplicate_request=requests.post(url,json=IS_DUPLICATE,headers=headers)
     is_duplicate_response=json.loads(is_duplicate_request.text)
     is_duplicate_doc=frappe.get_doc({
         "doctype":"Duplicate Receipt QR Codes",
@@ -291,4 +294,3 @@ def get_qrCode(doc):
 ## https://itax.kra.go.ke/KRA-Portal/invoiceChk.htm?actionCode=loadPage&invoiceNo=276086946000000002
 
 
-# orwa1053
