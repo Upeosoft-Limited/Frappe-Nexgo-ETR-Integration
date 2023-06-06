@@ -25,7 +25,12 @@ def get_pin_of_buyer(invoice_number):
 
 
 def get_mode_of_payment(invoice_number):
-    return frappe.db.get_value("Sales Invoice Payment",{"parent":invoice_number},"mode_of_payment")
+    payment_method= frappe.db.get_value("Sales Invoice Payment",{"parent":invoice_number},"mode_of_payment")
+    
+    if payment_method==None:
+        payment_method = "Cash"
+    
+    return payment_method
 
 
 def generate_qrCode(response_data_from_receipt_type):
@@ -42,8 +47,8 @@ def generate_qrCode(response_data_from_receipt_type):
     return qr_code_image
 
 link="https://itax.kra.go.ke/KRA-Portal/invoiceChk.htm?actionCode=loadPage&invoiceNo="
-url="http://217.199.151.78:8080/" 
-# url="http://192.168.43.1:8081/" 
+# url="http://217.199.151.78:8080/" 
+url="http://192.168.100.16:8081/" 
 headers = {
     "Authorization": "Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJLUkFNVzI3NjIwMjIwNzA4Njk0NiIsImlhdCI6MTY3NjM1NTY1MCwiZXhwIjoxNzA0ODM0MDAwLCJhdWQiOiJLUkFNVzI3NjIwMjIwNzA4Njk0NiIsImlzcyI6IkFqYW5zeSBUZWNobm9sb2d5IExpbWl0ZWQifQ.5oq3VhJdHGY6Luptpz0meCY4TuRHK65WlOzU_Rd9srY"
 }
@@ -53,22 +58,29 @@ def post_data(item):
 
     random_number=random.randint(5,60000000)
     random_receipt_number=str(random_number)+item       
-
+    
 
     invoice_info=frappe.db.get_all("Sales Invoice",{"name":item},["total","posting_date","posting_time"])
     total_cost=invoice_info[0]['total']
     posting_date=invoice_info[0]['posting_date']
     posting_time=invoice_info[0]['posting_time']
 
-    print(f"\n\n\n{random_receipt_number}\n\n\n")
-    print(f"\n\n\n Cash is {total_cost}\n\n\n")
+    # print(f"\n\n\n{random_receipt_number}\n\n\n")
+    # print(f"\n\n\n Cash is {total_cost}\n\n\n")
 
     item_codes_array=[]
     item_codes_array.append(item)
 
     for code in item_codes_array:
-        print(f"\n\n\n{code}\n\n\n")
+        # print(f"\n\n\n{code}\n\n\n")
+        item_tax_template=frappe.db.get_value("Sales Invoice Item",{"parent":code},"item_tax_template")
         data_from_invoice_item=frappe.db.get_all("Sales Invoice Item", {'parent':code},["item_name","qty","amount","uom"])
+
+        if item_tax_template:
+            tax_rate=frappe.db.get_value("Item Tax Template Detail",{'parent':item_tax_template},"tax_rate")
+        else:
+            tax_rate=0
+
 
         inv_items=[]
 
@@ -78,7 +90,7 @@ def post_data(item):
             "productName":invoice_item.item_name,
             "quantity":invoice_item.qty,
             "unitPrice":invoice_item.amount,
-            "taxRate": 16,
+            "taxRate": tax_rate,
             "taxExempted": False,
             # "hsCode": "000.111.23", 
             "unitOfMeasure": invoice_item.uom, 
@@ -106,7 +118,7 @@ def post_data(item):
 
         fiscal_response=requests.post(url,json=FISCAL,headers=headers)
         fiscal_data=json.loads(fiscal_response.text)
-
+        print(f"\n\n\n\n{fiscal_data}\n\n\n\n")
         sales_invoice_qrCodes=frappe.get_doc({
              "doctype" : "Sales Invoice QR Codes",
             "invoice_number" : code,
@@ -114,7 +126,15 @@ def post_data(item):
             "invoice_serial_number":random_receipt_number
         })
         sales_invoice_qrCodes.submit()
-    
+        
+        # cash_receipt_qrCode=frappe.get_doc({
+        #     "doctype":"Cash Receipts QR_codes",
+        #     "invoice_number":code,
+        #     "middlware_invoice_number":generate_qrCode(fiscal_data)
+        # })
+
+        # cash_receipt_qrCode.submit()
+
         print(f"\n\n\n this is the response data{fiscal_data}\n\n\n")
         return fiscal_data,fiscal_data['success']
 
