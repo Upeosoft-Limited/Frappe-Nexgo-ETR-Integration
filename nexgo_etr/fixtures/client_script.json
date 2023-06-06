@@ -4,6 +4,17 @@
   "doctype": "Client Script",
   "dt": "Sales Invoice",
   "enabled": 1,
+  "modified": "2023-06-02 10:51:48.131135",
+  "module": "Nexgo Etr",
+  "name": "Send To KRA",
+  "script": "frappe.ui.form.on('Sales Invoice', {\n\n})",
+  "view": "Form"
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Client Script",
+  "dt": "Sales Invoice",
+  "enabled": 1,
   "modified": "2023-04-28 16:00:09.567492",
   "module": "Nexgo Etr",
   "name": "custom sales invoice button",

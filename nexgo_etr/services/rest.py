@@ -47,8 +47,8 @@ def generate_qrCode(response_data_from_receipt_type):
     return qr_code_image
 
 link="https://itax.kra.go.ke/KRA-Portal/invoiceChk.htm?actionCode=loadPage&invoiceNo="
-# url="http://217.199.151.78:8080/" 
-url="http://192.168.100.16:8081/" 
+url="http://217.199.151.78:8080/" 
+# url="http://192.168.100.16:8081/" 
 headers = {
     "Authorization": "Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJLUkFNVzI3NjIwMjIwNzA4Njk0NiIsImlhdCI6MTY3NjM1NTY1MCwiZXhwIjoxNzA0ODM0MDAwLCJhdWQiOiJLUkFNVzI3NjIwMjIwNzA4Njk0NiIsImlzcyI6IkFqYW5zeSBUZWNobm9sb2d5IExpbWl0ZWQifQ.5oq3VhJdHGY6Luptpz0meCY4TuRHK65WlOzU_Rd9srY"
 }
